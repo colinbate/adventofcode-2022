@@ -1,5 +1,7 @@
 # Day 7: No Space Left On Device
 
+> Looking back at my `part1.ts` solution, I think I got lucky with the input as there is an error in my total calculation.
+
 You can hear birds chirping and raindrops hitting leaves as the expedition proceeds. Occasionally, you can even hear much louder sounds in the distance; how big do the animals get out here, anyway?
 
 The device the Elves gave you has problems with more than just its communication system. You try to run a system update:
