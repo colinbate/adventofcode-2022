@@ -1,9 +1,15 @@
+//
+// This attempt was abandoned. Check the `.js` files.
+//
+
 import { readLines } from "https://deno.land/std@0.167.0/io/mod.ts";
 // Valve AA has flow rate=0; tunnels lead to valves DD, II, BB
 type Node = { id: string; rate: number; neighbors: string[] };
 const nodes: Record<string, Node> = {};
 let nodeCount = 0;
 const notOpenable = new Set<string>();
+const weights: Record<string, Record<string, number>> = {};
+const nodePrime: Record<string, string> = {};
 for await (const line of readLines(Deno.stdin)) {
   const words = line.split(' ');
   const id = words[1];
@@ -13,8 +19,33 @@ for await (const line of readLines(Deno.stdin)) {
   nodes[id] = node;
   if (rate === 0) {
     notOpenable.add(id);
+  } else {
+    const idprime = `${id}'`;
+    const prime: Node = { id: idprime, rate: 0, neighbors };
+    nodes[idprime] = prime;
+    nodePrime[id] = idprime;
+    nodeCount++;
   }
   nodeCount++;
+}
+
+const setw = (from: string, to: string, w: number) => {
+  if (!(from in weights)) {
+    weights[from] = {};
+  }
+  weights[from][to] = w;
+}
+
+const getw = (from: string, to: string) => weights[from]?.[to] ?? -Infinity;
+
+for (const node of Object.values(nodes)) {
+  for (const dest of node.neighbors) {
+    setw(node.id, dest, node.rate);
+    const prime = nodePrime[dest];
+    if (prime) {
+      setw(node.id, prime, node.rate);
+    }
+  }
 }
 
 class SetStack {
